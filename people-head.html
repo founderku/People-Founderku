@@ -100,8 +100,12 @@
         <input type="text" id="taskTitle" placeholder="misal: bikin 3 draft caption IG">
         <label for="taskDesc">deskripsi (opsional)</label>
         <textarea id="taskDesc" placeholder="detail instruksinya apa"></textarea>
-        <label for="taskAssignee">assign ke siapa</label>
-        <select id="taskAssignee"></select>
+        <label>assign ke siapa</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;cursor:pointer;margin-bottom:10px">
+          <input type="checkbox" id="taskAssignAll" onchange="toggleAssignAll()" style="width:auto;margin:0">
+          assign ke semua founterns
+        </label>
+        <div id="taskAssigneeList" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;background:var(--bg-soft)"></div>
         <label for="taskDeadline">deadline (opsional)</label>
         <input type="date" id="taskDeadline">
         <label for="taskBriefPdf">file panduan PDF (opsional)</label>
@@ -255,15 +259,28 @@
   }
 
   function renderAssigneeOptions() {
-    const sel = el('taskAssignee');
-    sel.innerHTML = '';
-    overviewData.roster
-      .filter(r => r.Active === true || r.Active === 'TRUE')
-      .forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.Name; opt.textContent = r.Name + ' (' + r.Division + ')';
-        sel.appendChild(opt);
-      });
+    const listEl = el('taskAssigneeList');
+    listEl.innerHTML = '';
+    const active = overviewData.roster.filter(r => r.Active === true || r.Active === 'TRUE');
+    active.forEach(r => {
+      const row = document.createElement('label');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;font-weight:400;padding:5px 0;cursor:pointer';
+      row.innerHTML = `<input type="checkbox" class="taskAssigneeCheck" value="${r.Name.replace(/"/g, '&quot;')}" style="width:auto;margin:0"> ${r.Name} (${r.Division})`;
+      listEl.appendChild(row);
+    });
+    el('taskAssignAll').checked = false;
+  }
+
+  function toggleAssignAll() {
+    const allChecked = el('taskAssignAll').checked;
+    document.querySelectorAll('.taskAssigneeCheck').forEach(cb => {
+      cb.checked = allChecked;
+      cb.disabled = allChecked;
+    });
+  }
+
+  function getSelectedAssignees() {
+    return Array.from(document.querySelectorAll('.taskAssigneeCheck:checked')).map(cb => cb.value);
   }
 
   function renderTaskTable() {
@@ -314,8 +331,8 @@
     hide('taskError');
     const title = el('taskTitle').value.trim();
     if (!title) { el('taskError').textContent = 'judul tugas wajib diisi'; show('taskError'); return; }
-    const assignedTo = el('taskAssignee').value;
-    const assigneeRow = overviewData.roster.find(r => r.Name === assignedTo);
+    const assignees = getSelectedAssignees();
+    if (!assignees.length) { el('taskError').textContent = 'pilih minimal 1 orang, atau centang "assign ke semua founterns"'; show('taskError'); return; }
 
     let pdfBase64 = null, pdfFilename = null;
     const fileInput = el('taskBriefPdf');
@@ -329,11 +346,11 @@
       pdfFilename = file.name;
     }
 
-    setLoading('createTaskBtn', true, 'bikin tugas...');
+    setLoading('createTaskBtn', true, assignees.length > 1 ? `bikin ${assignees.length} tugas...` : 'bikin tugas...');
     const result = await callApi({
-      action: 'headCreateTask', headPassword,
+      action: 'headCreateTaskBulk', headPassword,
       title, description: el('taskDesc').value.trim(),
-      assignedTo, division: assigneeRow ? assigneeRow.Division : '',
+      assignees,
       deadline: el('taskDeadline').value,
       pdfBase64, pdfFilename
     });
@@ -341,6 +358,7 @@
     if (!result.ok) { el('taskError').textContent = result.error; show('taskError'); return; }
 
     el('taskTitle').value = ''; el('taskDesc').value = ''; el('taskDeadline').value = ''; el('taskBriefPdf').value = '';
+    el('taskAssignAll').checked = false;
     await refreshOverview();
   }
 
