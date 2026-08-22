@@ -97,6 +97,9 @@
         <select id="taskAssignee"></select>
         <label for="taskDeadline">deadline (opsional)</label>
         <input type="date" id="taskDeadline">
+        <label for="taskBriefPdf">file panduan PDF (opsional)</label>
+        <input type="file" id="taskBriefPdf" accept="application/pdf">
+        <div class="hint" style="font-size:12px;color:var(--text-faint);margin:-10px 0 14px">kalau ada instruksi atau template, upload di sini biar founterns bisa langsung download.</div>
         <div id="taskError" class="error hidden"></div>
         <button onclick="doCreateTask()">bikin tugas</button>
       </div>
@@ -104,7 +107,7 @@
       <div class="card">
         <h2 style="margin-top:0">semua tugas</h2>
         <table>
-          <thead><tr><th>judul</th><th>assigned to</th><th>status</th><th>pdf</th></tr></thead>
+          <thead><tr><th>judul</th><th>assigned to</th><th>status</th><th>panduan</th><th>hasil kerjaan</th></tr></thead>
           <tbody id="taskTableBody"></tbody>
         </table>
       </div>
@@ -254,6 +257,7 @@
         <td>${t.Title}</td>
         <td>${t.AssignedTo}</td>
         <td><span class="pill ${statusClass}">${t.Status}</span></td>
+        <td>${t.BriefPdfLink ? `<a class="pdf-link" href="${t.BriefPdfLink}" target="_blank" rel="noopener">lihat</a>` : '-'}</td>
         <td>${sub ? `<a class="pdf-link" href="${sub.PdfLink}" target="_blank" rel="noopener">lihat pdf</a>` : '-'}</td>
       </tr>`;
     }).join('');
@@ -275,6 +279,15 @@
     `).join('');
   }
 
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function doCreateTask() {
     hide('taskError');
     const title = el('taskTitle').value.trim();
@@ -282,15 +295,28 @@
     const assignedTo = el('taskAssignee').value;
     const assigneeRow = overviewData.roster.find(r => r.Name === assignedTo);
 
+    let pdfBase64 = null, pdfFilename = null;
+    const fileInput = el('taskBriefPdf');
+    if (fileInput.files.length) {
+      const file = fileInput.files[0];
+      if (file.type !== 'application/pdf') {
+        el('taskError').textContent = 'file panduan harus format PDF';
+        show('taskError'); return;
+      }
+      pdfBase64 = await fileToBase64(file);
+      pdfFilename = file.name;
+    }
+
     const result = await callApi({
       action: 'headCreateTask', headPassword,
       title, description: el('taskDesc').value.trim(),
       assignedTo, division: assigneeRow ? assigneeRow.Division : '',
-      deadline: el('taskDeadline').value
+      deadline: el('taskDeadline').value,
+      pdfBase64, pdfFilename
     });
     if (!result.ok) { el('taskError').textContent = result.error; show('taskError'); return; }
 
-    el('taskTitle').value = ''; el('taskDesc').value = ''; el('taskDeadline').value = '';
+    el('taskTitle').value = ''; el('taskDesc').value = ''; el('taskDeadline').value = ''; el('taskBriefPdf').value = '';
     await refreshOverview();
   }
 

@@ -359,6 +359,7 @@
         <h3>${t.Title}</h3>
         <p>${t.Description || ''}</p>
         ${t.Deadline ? `<div class="deadline">deadline: ${t.Deadline}</div>` : ''}
+        ${t.BriefPdfLink ? `<div style="margin-bottom:10px"><a href="${t.BriefPdfLink}" target="_blank" rel="noopener" style="color:var(--brand-indigo);font-weight:700;font-size:13px;text-decoration:none">📎 lihat file panduan</a></div>` : ''}
         <button onclick="openSubmitTask('${t.TaskID}', '${t.Title.replace(/'/g, "\\'")}')">submit hasil</button>
       </div>
     `).join('');
