@@ -44,6 +44,7 @@
 
   h1, h2, h3, .fk-serif { font-family: 'Fraunces', serif; }
   .wrap { max-width: 640px; margin: 0 auto; padding: 24px 20px 80px; position: relative; z-index: 1; }
+  #loginView, #nameView { min-height: 68vh; display: flex; flex-direction: column; justify-content: center; }
   .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
   .brand-mark { display: flex; align-items: center; gap: 10px; }
   .brand-mark img { width: 32px; height: 32px; border-radius: 9px; }
@@ -133,8 +134,8 @@
     <!-- LOGIN DIVISI -->
     <div id="loginView">
       <div class="intro">
-        <h1>selamat datang di growternship founderku</h1>
-        <p>ini tempat kamu submit tugas dan isi catatan harian selama magang bareng kami. progress kamu di sini juga yang jadi bahan evaluasi & portofolio kamu nanti — jadi konsisten, ya.</p>
+        <h1>selamat datang, founterns!</h1>
+        <p>ini portal buat kamu submit tugas dan isi catatan harian selama founternship di founderku. progress kamu di sini juga jadi bahan evaluasi dan portofolio kamu nanti, jadi konsisten ya.</p>
       </div>
       <div class="card">
         <h2 style="margin-top:0;font-size:18px">masuk pakai password divisi</h2>
@@ -178,7 +179,7 @@
         <h2 style="margin-top:0;font-size:18px">daily pulse hari ini</h2>
         <p style="font-size:13px;color:var(--text-soft);margin-top:-8px">gimana kabar magang kamu hari ini? isi sebentar aja, nggak perlu panjang-panjang.</p>
         <div id="pulseAlreadyDone" class="success-box hidden">
-          <div>udah isi pulse hari ini ✓ — sampai ketemu besok!</div>
+          <div>udah isi pulse hari ini ✓, sampai ketemu besok!</div>
         </div>
         <div id="pulseForm">
           <label>mood kamu gimana?</label>
