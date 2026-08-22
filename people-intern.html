@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>portal intern · founderku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-amber: #F2A623;
+    --brand-coral: #E15C3E;
+    --brand-indigo: #7A78C4;
+    --bg: #FFFFFF;
+    --bg-soft: #F5F4F1;
+    --bg-dark-block: #14131F;
+    --text: #14131F;
+    --text-soft: rgba(20,19,31,0.65);
+    --text-faint: rgba(20,19,31,0.45);
+    --border: rgba(20,19,31,0.10);
+    --card-bg: #F5F4F1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Manrope', sans-serif; background: var(--bg-soft); color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .fk-serif { font-family: 'Fraunces', serif; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 24px 20px 80px; }
+  .top {
+    display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px;
+  }
+  .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; text-transform: lowercase; }
+  .brand span { color: var(--brand-coral); }
+  .tag { font-size: 12px; color: var(--text-faint); text-transform: lowercase; }
+  .card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; margin-bottom: 16px;
+  }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: lowercase; }
+  input, select, textarea {
+    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
+    font-family: 'Manrope', sans-serif; font-size: 15px; margin-bottom: 14px; background: var(--bg-soft);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  button {
+    background: var(--bg-dark-block); color: #fff; border: none; border-radius: 999px;
+    padding: 13px 24px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px;
+    cursor: pointer; text-transform: lowercase; width: 100%;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .error { color: var(--brand-coral); font-size: 13px; margin: -8px 0 14px; }
+  .hint { font-size: 12px; color: var(--text-faint); margin-top: -10px; margin-bottom: 14px; }
+  .hidden { display: none !important; }
+
+  .stat-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .stat {
+    flex: 1; background: var(--bg-dark-block); color: #fff; border-radius: 14px; padding: 16px; text-align: center;
+  }
+  .stat .num { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; }
+  .stat .lbl { font-size: 11px; opacity: 0.7; text-transform: lowercase; margin-top: 2px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .badge { background: var(--brand-amber); color: #14131F; font-size: 12px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+
+  .task-item { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+  .task-item h3 { margin: 0 0 6px; font-size: 16px; }
+  .task-item p { margin: 0 0 10px; font-size: 14px; color: var(--text-soft); }
+  .task-item .deadline { font-size: 12px; color: var(--brand-coral); font-weight: 700; margin-bottom: 10px; }
+  .task-item button { width: auto; padding: 8px 18px; font-size: 13px; }
+  .empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 24px 0; }
+
+  .mood-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .mood-btn {
+    flex: 1; padding: 14px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-soft);
+    font-size: 24px; cursor: pointer;
+  }
+  .mood-btn.active { border-color: var(--brand-amber); background: rgba(242,166,35,0.15); }
+  .success-box { background: rgba(122,120,196,0.12); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px; }
+  .success-box .xp { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--brand-indigo); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">founderku<span>·</span>people</div>
+    <div class="tag">portal intern</div>
+  </div>
+
+  <!-- LOGIN DIVISI -->
+  <div id="loginView" class="card">
+    <h2 style="margin-top:0">masuk pakai password divisi</h2>
+    <label for="divisionSelect">divisi kamu</label>
+    <select id="divisionSelect"></select>
+    <label for="divisionPassword">password</label>
+    <input type="password" id="divisionPassword" placeholder="password divisi">
+    <div id="loginError" class="error hidden"></div>
+    <button onclick="doLoginDivision()">masuk</button>
+  </div>
+
+  <!-- PILIH NAMA -->
+  <div id="nameView" class="card hidden">
+    <h2 style="margin-top:0">kamu yang mana?</h2>
+    <label for="nameSelect">pilih nama kamu</label>
+    <select id="nameSelect"></select>
+    <button onclick="chooseName()">lanjut</button>
+  </div>
+
+  <!-- DASHBOARD INTERN -->
+  <div id="dashView" class="hidden">
+    <div class="stat-row">
+      <div class="stat"><div class="num" id="statXP">0</div><div class="lbl">total xp</div></div>
+      <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">hari beruntun</div></div>
+      <div class="stat"><div class="num" id="statTasks">0</div><div class="lbl">tugas selesai</div></div>
+    </div>
+    <div id="badgeRow" class="badges"></div>
+
+    <div class="card">
+      <h2 style="margin-top:0">daily pulse hari ini</h2>
+      <div id="pulseAlreadyDone" class="success-box hidden">
+        <div>sudah isi pulse hari ini ✓</div>
+      </div>
+      <div id="pulseForm">
+        <label>mood kamu gimana?</label>
+        <div class="mood-row" id="moodRow">
+          <div class="mood-btn" data-mood="semangat">🔥</div>
+          <div class="mood-btn" data-mood="oke">🙂</div>
+          <div class="mood-btn" data-mood="biasa">😐</div>
+          <div class="mood-btn" data-mood="capek">😮‍💨</div>
+          <div class="mood-btn" data-mood="berat">😞</div>
+        </div>
+        <label for="pulseNote">catatan singkat (opsional)</label>
+        <textarea id="pulseNote" placeholder="lagi ngerjain apa, ada kendala nggak, dll"></textarea>
+        <div id="pulseError" class="error hidden"></div>
+        <button onclick="doSubmitPulse()">submit pulse (+10 xp)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">tugas kamu</h2>
+      <div id="taskList"></div>
+    </div>
+  </div>
+
+  <!-- MODAL SUBMIT TUGAS -->
+  <div id="submitTaskView" class="card hidden">
+    <h2 style="margin-top:0" id="submitTaskTitle">submit tugas</h2>
+    <label for="taskPdf">file PDF hasil kerjaan</label>
+    <input type="file" id="taskPdf" accept="application/pdf">
+    <label for="taskLink">link tambahan (opsional, misal Drive/Figma)</label>
+    <input type="text" id="taskLink" placeholder="https://...">
+    <div id="submitTaskError" class="error hidden"></div>
+    <button onclick="doSubmitTask()">submit</button>
+    <button class="secondary" style="margin-top:8px" onclick="closeSubmitTask()">batal</button>
+  </div>
+</div>
+
+<script>
+  // GANTI dengan URL Web App Apps Script kamu setelah deploy
+  const API_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_KAMU';
+
+  const DIVISIONS = [
+    'Content Writer', 'Graphic Designer', 'HR Generalist', 'Marketing Strategist',
+    'Organizational Development', 'Quality Control of Product', 'Social Media Specialist',
+    'Talent Acquisition', 'Training & Development'
+  ];
+
+  let currentDivision = '';
+  let currentName = '';
+  let currentTaskId = '';
+  let selectedMood = '';
+  let allTasks = [];
+
+  function el(id) { return document.getElementById(id); }
+  function show(id) { el(id).classList.remove('hidden'); }
+  function hide(id) { el(id).classList.add('hidden'); }
+
+  function initDivisionSelect() {
+    const sel = el('divisionSelect');
+    DIVISIONS.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d; opt.textContent = d;
+      sel.appendChild(opt);
+    });
+  }
+  initDivisionSelect();
+
+  async function callApi(payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  }
+
+  async function doLoginDivision() {
+    hide('loginError');
+    const division = el('divisionSelect').value;
+    const password = el('divisionPassword').value.trim();
+    if (!password) { el('loginError').textContent = 'password wajib diisi'; show('loginError'); return; }
+
+    const result = await callApi({ action: 'loginDivision', division, password });
+    if (!result.ok) { el('loginError').textContent = result.error; show('loginError'); return; }
+
+    currentDivision = division;
+    const sel = el('nameSelect');
+    sel.innerHTML = '';
+    result.names.forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n; opt.textContent = n;
+      sel.appendChild(opt);
+    });
+    hide('loginView'); show('nameView');
+  }
+
+  async function chooseName() {
+    currentName = el('nameSelect').value;
+    hide('nameView'); show('dashView');
+    await refreshDashboard();
+  }
+
+  async function refreshDashboard() {
+    const pulse = await callApi({ action: 'getPulseStatus', name: currentName });
+    if (pulse.ok) {
+      el('statXP').textContent = pulse.totalXP;
+      el('statStreak').textContent = pulse.streak;
+      el('statTasks').textContent = pulse.totalTasksSubmitted;
+      el('badgeRow').innerHTML = pulse.badges.map(b => `<span class="badge">${b}</span>`).join('');
+    }
+
+    const taskRes = await callApi({ action: 'getTasksForPerson', name: currentName });
+    if (taskRes.ok) {
+      allTasks = taskRes.tasks;
+      renderTasks();
+    }
+  }
+
+  function renderTasks() {
+    const list = el('taskList');
+    if (allTasks.length === 0) {
+      list.innerHTML = '<div class="empty">belum ada tugas baru buat kamu</div>';
+      return;
+    }
+    list.innerHTML = allTasks.map(t => `
+      <div class="task-item">
+        <h3>${t.Title}</h3>
+        <p>${t.Description || ''}</p>
+        ${t.Deadline ? `<div class="deadline">deadline: ${t.Deadline}</div>` : ''}
+        <button onclick="openSubmitTask('${t.TaskID}', '${t.Title.replace(/'/g, "\\'")}')">submit hasil</button>
+      </div>
+    `).join('');
+  }
+
+  function openSubmitTask(taskId, title) {
+    currentTaskId = taskId;
+    el('submitTaskTitle').textContent = 'submit: ' + title;
+    hide('dashView'); show('submitTaskView');
+  }
+  function closeSubmitTask() {
+    hide('submitTaskView'); show('dashView');
+    el('taskPdf').value = ''; el('taskLink').value = '';
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function doSubmitTask() {
+    hide('submitTaskError');
+    const fileInput = el('taskPdf');
+    if (!fileInput.files.length) {
+      el('submitTaskError').textContent = 'file PDF wajib diupload';
+      show('submitTaskError'); return;
+    }
+    const file = fileInput.files[0];
+    if (file.type !== 'application/pdf') {
+      el('submitTaskError').textContent = 'file harus format PDF';
+      show('submitTaskError'); return;
+    }
+    const pdfBase64 = await fileToBase64(file);
+    const extraLink = el('taskLink').value.trim();
+
+    const result = await callApi({
+      action: 'submitTask', taskId: currentTaskId, name: currentName, division: currentDivision,
+      pdfBase64, pdfFilename: file.name, extraLink
+    });
+    if (!result.ok) { el('submitTaskError').textContent = result.error; show('submitTaskError'); return; }
+
+    closeSubmitTask();
+    await refreshDashboard();
+  }
+
+  // mood picker
+  document.getElementById('moodRow').addEventListener('click', (e) => {
+    const btn = e.target.closest('.mood-btn');
+    if (!btn) return;
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedMood = btn.dataset.mood;
+  });
+
+  async function doSubmitPulse() {
+    hide('pulseError');
+    if (!selectedMood) { el('pulseError').textContent = 'pilih mood dulu'; show('pulseError'); return; }
+    const note = el('pulseNote').value.trim();
+
+    const result = await callApi({ action: 'submitPulse', name: currentName, division: currentDivision, mood: selectedMood, note });
+    if (!result.ok) { el('pulseError').textContent = result.error; show('pulseError'); return; }
+
+    hide('pulseForm'); show('pulseAlreadyDone');
+    el('statXP').textContent = result.totalXP;
+    el('statStreak').textContent = result.streak;
+    el('badgeRow').innerHTML = result.badges.map(b => `<span class="badge">${b}</span>`).join('');
+  }
+</script>
+</body>
+</html>
