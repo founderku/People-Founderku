@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>head panel · founderku people</title>
+<link rel="icon" type="image/jpeg" href="images/founderku-logo.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -58,7 +59,10 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <div class="brand">founderku<span>·</span>people</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <img src="images/founderku-logo.jpeg" alt="founderku logo" style="width:28px;height:28px;border-radius:8px">
+      <div class="brand">founderku<span>·</span>people</div>
+    </div>
     <div class="tag">head panel</div>
   </div>
 
@@ -73,9 +77,12 @@
 
   <!-- DASHBOARD -->
   <div id="dashView" class="hidden">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button onclick="doLogout()" style="background:transparent;color:var(--brand-coral);border:none;box-shadow:none;width:auto;padding:0;text-decoration:underline;font-size:12px">keluar</button>
+    </div>
     <div class="tabs">
       <div class="tab-btn active" data-tab="tasks" onclick="switchTab('tasks')">tugas & submission</div>
-      <div class="tab-btn" data-tab="roster" onclick="switchTab('roster')">roster intern</div>
+      <div class="tab-btn" data-tab="roster" onclick="switchTab('roster')">roster founterns</div>
     </div>
 
     <!-- TAB: TASKS -->
@@ -106,7 +113,7 @@
     <!-- TAB: ROSTER -->
     <div id="tabRoster" class="hidden">
       <div class="card">
-        <h2 style="margin-top:0">tambah intern baru</h2>
+        <h2 style="margin-top:0">tambah founterns baru</h2>
         <label for="newInternName">nama</label>
         <input type="text" id="newInternName" placeholder="nama lengkap">
         <label for="newInternDivision">divisi</label>
@@ -143,6 +150,36 @@
   function show(id) { el(id).classList.remove('hidden'); }
   function hide(id) { el(id).classList.add('hidden'); }
 
+  // ============ SESI: tidak reset saat refresh ============
+  function saveSession() { sessionStorage.setItem('fk_head_password', headPassword); }
+  function clearSession() { sessionStorage.removeItem('fk_head_password'); }
+  async function restoreSession() {
+    const pw = sessionStorage.getItem('fk_head_password');
+    if (pw) {
+      const result = await callApi({ action: 'loginHead', password: pw });
+      if (result.ok) {
+        headPassword = pw;
+        hide('loginView'); show('dashView');
+        enterAppState();
+        populateDivisionSelects();
+        await refreshOverview();
+      } else {
+        clearSession();
+      }
+    }
+  }
+
+  // ============ TOMBOL BACK = LOGOUT ============
+  function enterAppState() { history.pushState({ fkApp: true }, '', location.href); }
+  window.addEventListener('popstate', () => { doLogout(); });
+  function doLogout() {
+    clearSession();
+    headPassword = '';
+    hide('dashView'); show('loginView');
+    el('headPassword').value = '';
+    history.replaceState({ fkApp: false }, '', location.href);
+  }
+
   async function callApi(payload) {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -158,6 +195,8 @@
     const result = await callApi({ action: 'loginHead', password: pw });
     if (!result.ok) { el('loginError').textContent = result.error; show('loginError'); return; }
     headPassword = pw;
+    saveSession();
+    enterAppState();
     hide('loginView'); show('dashView');
     populateDivisionSelects();
     await refreshOverview();
@@ -273,6 +312,9 @@
     const result = await callApi({ action: 'headRemoveIntern', headPassword, name });
     if (result.ok) await refreshOverview();
   }
+
+  // saat halaman dibuka/refresh, coba pulihkan sesi dulu
+  restoreSession();
 </script>
 </body>
 </html>

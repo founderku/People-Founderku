@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>portal intern · founderku</title>
+<title>portal founterns · founderku</title>
+<link rel="icon" type="image/jpeg" href="images/founderku-logo.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,149 +14,215 @@
     --brand-amber: #F2A623;
     --brand-coral: #E15C3E;
     --brand-indigo: #7A78C4;
-    --bg: #FFFFFF;
     --bg-soft: #F5F4F1;
     --bg-dark-block: #14131F;
     --text: #14131F;
     --text-soft: rgba(20,19,31,0.65);
     --text-faint: rgba(20,19,31,0.45);
     --border: rgba(20,19,31,0.10);
-    --card-bg: #F5F4F1;
+    --glass-bg: rgba(255,255,255,0.55);
+    --glass-bg-strong: rgba(255,255,255,0.72);
+    --glass-border: rgba(255,255,255,0.65);
+    --glass-shadow: 0 8px 32px rgba(20,19,31,0.10), 0 1px 0 rgba(255,255,255,0.4) inset;
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
-    margin: 0; font-family: 'Manrope', sans-serif; background: var(--bg-soft); color: var(--text);
+    margin: 0; font-family: 'Manrope', sans-serif; color: var(--text);
     -webkit-font-smoothing: antialiased;
+    background: var(--bg-soft);
+    position: relative;
+    overflow-x: hidden;
   }
+  /* orb gradients di belakang, biar efek kaca kerasa */
+  .fk-orb {
+    position: fixed; border-radius: 50%; filter: blur(70px); z-index: 0; pointer-events: none;
+  }
+  .fk-orb-1 { width: 360px; height: 360px; top: -120px; left: -100px; background: radial-gradient(circle, var(--brand-indigo), transparent 70%); opacity: 0.35; }
+  .fk-orb-2 { width: 320px; height: 320px; top: 10%; right: -120px; background: radial-gradient(circle, var(--brand-amber), transparent 70%); opacity: 0.35; }
+  .fk-orb-3 { width: 340px; height: 340px; bottom: -140px; left: 20%; background: radial-gradient(circle, var(--brand-coral), transparent 70%); opacity: 0.3; }
+
   h1, h2, h3, .fk-serif { font-family: 'Fraunces', serif; }
-  .wrap { max-width: 640px; margin: 0 auto; padding: 24px 20px 80px; }
-  .top {
-    display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px;
-  }
-  .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; text-transform: lowercase; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 24px 20px 80px; position: relative; z-index: 1; }
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .brand-mark { display: flex; align-items: center; gap: 10px; }
+  .brand-mark img { width: 32px; height: 32px; border-radius: 9px; }
+  .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 19px; text-transform: lowercase; }
   .brand span { color: var(--brand-coral); }
   .tag { font-size: 12px; color: var(--text-faint); text-transform: lowercase; }
+
   .card {
-    background: var(--bg); border: 1px solid var(--border); border-radius: 16px;
-    padding: 24px; margin-bottom: 16px;
+    background: var(--glass-bg); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: var(--glass-shadow);
+    padding: 26px; margin-bottom: 16px;
   }
-  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: lowercase; }
+  .intro { margin-bottom: 22px; }
+  .intro h1 { font-size: 26px; margin: 0 0 8px; line-height: 1.2; }
+  .intro p { font-size: 14px; color: var(--text-soft); margin: 0; line-height: 1.6; }
+
+  label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; text-transform: lowercase; }
   input, select, textarea {
-    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
-    font-family: 'Manrope', sans-serif; font-size: 15px; margin-bottom: 14px; background: var(--bg-soft);
+    width: 100%; padding: 13px 15px; border-radius: 12px; border: 1px solid var(--border);
+    font-family: 'Manrope', sans-serif; font-size: 15px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(6px);
   }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand-indigo); outline-offset: 1px; }
   textarea { resize: vertical; min-height: 80px; }
   button {
     background: var(--bg-dark-block); color: #fff; border: none; border-radius: 999px;
-    padding: 13px 24px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px;
+    padding: 14px 24px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px;
     cursor: pointer; text-transform: lowercase; width: 100%;
+    box-shadow: 0 6px 18px rgba(20,19,31,0.18);
   }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); box-shadow: none; }
   .error { color: var(--brand-coral); font-size: 13px; margin: -8px 0 14px; }
   .hint { font-size: 12px; color: var(--text-faint); margin-top: -10px; margin-bottom: 14px; }
   .hidden { display: none !important; }
+  .logout-link { font-size: 12px; color: var(--text-faint); text-decoration: underline; cursor: pointer; background: none; width: auto; padding: 0; box-shadow: none; }
 
   .stat-row { display: flex; gap: 10px; margin-bottom: 20px; }
   .stat {
-    flex: 1; background: var(--bg-dark-block); color: #fff; border-radius: 14px; padding: 16px; text-align: center;
+    flex: 1; background: var(--bg-dark-block); color: #fff; border-radius: 16px; padding: 16px; text-align: center;
+    box-shadow: 0 6px 18px rgba(20,19,31,0.18);
   }
   .stat .num { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; }
   .stat .lbl { font-size: 11px; opacity: 0.7; text-transform: lowercase; margin-top: 2px; }
   .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .badge { background: var(--brand-amber); color: #14131F; font-size: 12px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
 
-  .task-item { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+  .task-item { border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.4); }
   .task-item h3 { margin: 0 0 6px; font-size: 16px; }
   .task-item p { margin: 0 0 10px; font-size: 14px; color: var(--text-soft); }
   .task-item .deadline { font-size: 12px; color: var(--brand-coral); font-weight: 700; margin-bottom: 10px; }
-  .task-item button { width: auto; padding: 8px 18px; font-size: 13px; }
-  .empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 24px 0; }
+  .task-item button { width: auto; padding: 9px 18px; font-size: 13px; }
+  .empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 24px 10px; }
+  .empty .emoji { font-size: 26px; display: block; margin-bottom: 8px; }
 
   .mood-row { display: flex; gap: 8px; margin-bottom: 14px; }
   .mood-btn {
-    flex: 1; padding: 14px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-soft);
-    font-size: 24px; cursor: pointer;
+    flex: 1; padding: 14px 0; border-radius: 14px; border: 1px solid var(--border); background: rgba(255,255,255,0.5);
+    font-size: 24px; cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease;
   }
-  .mood-btn.active { border-color: var(--brand-amber); background: rgba(242,166,35,0.15); }
-  .success-box { background: rgba(122,120,196,0.12); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px; }
+  .mood-btn:hover { transform: translateY(-2px); }
+  .mood-btn.active { border-color: var(--brand-amber); background: rgba(242,166,35,0.18); }
+  .success-box { background: rgba(122,120,196,0.15); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 16px; }
   .success-box .xp { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--brand-indigo); }
+
+  .thanks-view { text-align: center; padding: 12px 6px; }
+  .thanks-view .emoji { font-size: 48px; margin-bottom: 10px; display: block; }
+  .thanks-view h2 { font-size: 22px; margin: 0 0 8px; }
+  .thanks-view p { font-size: 14px; color: var(--text-soft); margin: 0 0 4px; line-height: 1.6; }
+  .thanks-view .semangat { font-weight: 700; color: var(--brand-coral); margin-top: 10px; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">founderku<span>·</span>people</div>
-    <div class="tag">portal intern</div>
-  </div>
+  <div class="fk-orb fk-orb-1"></div>
+  <div class="fk-orb fk-orb-2"></div>
+  <div class="fk-orb fk-orb-3"></div>
 
-  <!-- LOGIN DIVISI -->
-  <div id="loginView" class="card">
-    <h2 style="margin-top:0">masuk pakai password divisi</h2>
-    <label for="divisionSelect">divisi kamu</label>
-    <select id="divisionSelect"></select>
-    <label for="divisionPassword">password</label>
-    <input type="password" id="divisionPassword" placeholder="password divisi">
-    <div id="loginError" class="error hidden"></div>
-    <button onclick="doLoginDivision()">masuk</button>
-  </div>
-
-  <!-- PILIH NAMA -->
-  <div id="nameView" class="card hidden">
-    <h2 style="margin-top:0">kamu yang mana?</h2>
-    <label for="nameSelect">pilih nama kamu</label>
-    <select id="nameSelect"></select>
-    <button onclick="chooseName()">lanjut</button>
-  </div>
-
-  <!-- DASHBOARD INTERN -->
-  <div id="dashView" class="hidden">
-    <div class="stat-row">
-      <div class="stat"><div class="num" id="statXP">0</div><div class="lbl">total xp</div></div>
-      <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">hari beruntun</div></div>
-      <div class="stat"><div class="num" id="statTasks">0</div><div class="lbl">tugas selesai</div></div>
-    </div>
-    <div id="badgeRow" class="badges"></div>
-
-    <div class="card">
-      <h2 style="margin-top:0">daily pulse hari ini</h2>
-      <div id="pulseAlreadyDone" class="success-box hidden">
-        <div>sudah isi pulse hari ini ✓</div>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand-mark">
+        <img src="images/founderku-logo.jpeg" alt="founderku logo">
+        <div class="brand">founderku<span>·</span>people</div>
       </div>
-      <div id="pulseForm">
-        <label>mood kamu gimana?</label>
-        <div class="mood-row" id="moodRow">
-          <div class="mood-btn" data-mood="semangat">🔥</div>
-          <div class="mood-btn" data-mood="oke">🙂</div>
-          <div class="mood-btn" data-mood="biasa">😐</div>
-          <div class="mood-btn" data-mood="capek">😮‍💨</div>
-          <div class="mood-btn" data-mood="berat">😞</div>
+      <div class="tag">portal founterns</div>
+    </div>
+
+    <!-- LOGIN DIVISI -->
+    <div id="loginView">
+      <div class="intro">
+        <h1>selamat datang di growternship founderku</h1>
+        <p>ini tempat kamu submit tugas dan isi catatan harian selama magang bareng kami. progress kamu di sini juga yang jadi bahan evaluasi & portofolio kamu nanti — jadi konsisten, ya.</p>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0;font-size:18px">masuk pakai password divisi</h2>
+        <label for="divisionSelect">divisi kamu</label>
+        <select id="divisionSelect"></select>
+        <label for="divisionPassword">password</label>
+        <input type="password" id="divisionPassword" placeholder="password divisi">
+        <div class="hint">belum punya password? cek grup divisi kamu atau tanya PIC.</div>
+        <div id="loginError" class="error hidden"></div>
+        <button onclick="doLoginDivision()">masuk</button>
+      </div>
+    </div>
+
+    <!-- PILIH NAMA -->
+    <div id="nameView" class="card hidden">
+      <h2 style="margin-top:0">kamu yang mana?</h2>
+      <p style="font-size:13px;color:var(--text-soft);margin-top:-6px">pilih nama sendiri biar progress & XP-nya ke-track per orang, bukan gabung satu divisi.</p>
+      <label for="nameSelect">pilih nama kamu</label>
+      <select id="nameSelect"></select>
+      <button onclick="chooseName()">lanjut</button>
+    </div>
+
+    <!-- DASHBOARD INTERN -->
+    <div id="dashView" class="hidden">
+      <div class="intro" style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div>
+          <h1 id="welcomeHeading" style="font-size:22px">halo!</h1>
+          <p>progress kamu selama growternship, terus konsisten ya.</p>
         </div>
-        <label for="pulseNote">catatan singkat (opsional)</label>
-        <textarea id="pulseNote" placeholder="lagi ngerjain apa, ada kendala nggak, dll"></textarea>
-        <div id="pulseError" class="error hidden"></div>
-        <button onclick="doSubmitPulse()">submit pulse (+10 xp)</button>
+        <button class="logout-link" onclick="doLogout()">keluar</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="statXP">0</div><div class="lbl">total xp</div></div>
+        <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">hari beruntun</div></div>
+        <div class="stat"><div class="num" id="statTasks">0</div><div class="lbl">tugas selesai</div></div>
+      </div>
+      <div id="badgeRow" class="badges"></div>
+
+      <div class="card" style="margin-top:16px">
+        <h2 style="margin-top:0;font-size:18px">daily pulse hari ini</h2>
+        <p style="font-size:13px;color:var(--text-soft);margin-top:-8px">gimana kabar magang kamu hari ini? isi sebentar aja, nggak perlu panjang-panjang.</p>
+        <div id="pulseAlreadyDone" class="success-box hidden">
+          <div>udah isi pulse hari ini ✓ — sampai ketemu besok!</div>
+        </div>
+        <div id="pulseForm">
+          <label>mood kamu gimana?</label>
+          <div class="mood-row" id="moodRow">
+            <div class="mood-btn" data-mood="semangat">🔥</div>
+            <div class="mood-btn" data-mood="oke">🙂</div>
+            <div class="mood-btn" data-mood="biasa">😐</div>
+            <div class="mood-btn" data-mood="capek">😮‍💨</div>
+            <div class="mood-btn" data-mood="berat">😞</div>
+          </div>
+          <label for="pulseNote">catatan singkat (opsional)</label>
+          <textarea id="pulseNote" placeholder="lagi ngerjain apa, ada kendala nggak, dll"></textarea>
+          <div id="pulseError" class="error hidden"></div>
+          <button onclick="doSubmitPulse()">submit pulse (+10 xp)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0;font-size:18px">tugas kamu</h2>
+        <div id="taskList"></div>
       </div>
     </div>
 
-    <div class="card">
-      <h2 style="margin-top:0">tugas kamu</h2>
-      <div id="taskList"></div>
+    <!-- MODAL SUBMIT TUGAS -->
+    <div id="submitTaskView" class="card hidden">
+      <h2 style="margin-top:0" id="submitTaskTitle">submit tugas</h2>
+      <label for="taskPdf">file PDF hasil kerjaan</label>
+      <input type="file" id="taskPdf" accept="application/pdf">
+      <label for="taskLink">link tambahan (opsional, misal Drive/Figma)</label>
+      <input type="text" id="taskLink" placeholder="https://...">
+      <div id="submitTaskError" class="error hidden"></div>
+      <button onclick="doSubmitTask()">submit</button>
+      <button class="secondary" style="margin-top:8px" onclick="closeSubmitTask()">batal</button>
+    </div>
+
+    <!-- LAYAR TERIMA KASIH -->
+    <div id="thanksView" class="card thanks-view hidden">
+      <span class="emoji">🎉</span>
+      <h2>makasih udah submit!</h2>
+      <p>tugas kamu udah masuk dan bakal di-review sama tim founderku.</p>
+      <p class="semangat">progress kecil hari ini, langkah besar buat portofolio kamu nanti. semangat terus ya! 🚀</p>
+      <button style="margin-top:16px" onclick="closeThanksView()">balik ke dashboard</button>
     </div>
   </div>
-
-  <!-- MODAL SUBMIT TUGAS -->
-  <div id="submitTaskView" class="card hidden">
-    <h2 style="margin-top:0" id="submitTaskTitle">submit tugas</h2>
-    <label for="taskPdf">file PDF hasil kerjaan</label>
-    <input type="file" id="taskPdf" accept="application/pdf">
-    <label for="taskLink">link tambahan (opsional, misal Drive/Figma)</label>
-    <input type="text" id="taskLink" placeholder="https://...">
-    <div id="submitTaskError" class="error hidden"></div>
-    <button onclick="doSubmitTask()">submit</button>
-    <button class="secondary" style="margin-top:8px" onclick="closeSubmitTask()">batal</button>
-  </div>
-</div>
 
 <script>
   // GANTI dengan URL Web App Apps Script kamu setelah deploy
@@ -196,6 +263,44 @@
     return res.json();
   }
 
+  // ============ SESI: tidak reset saat refresh ============
+  function saveSession() {
+    sessionStorage.setItem('fk_intern_division', currentDivision);
+    sessionStorage.setItem('fk_intern_name', currentName);
+  }
+  function clearSession() {
+    sessionStorage.removeItem('fk_intern_division');
+    sessionStorage.removeItem('fk_intern_name');
+  }
+  async function restoreSession() {
+    const division = sessionStorage.getItem('fk_intern_division');
+    const name = sessionStorage.getItem('fk_intern_name');
+    if (division && name) {
+      currentDivision = division; currentName = name;
+      hide('loginView'); hide('nameView'); show('dashView');
+      enterAppState();
+      await refreshDashboard();
+      return true;
+    }
+    return false;
+  }
+
+  // ============ TOMBOL BACK = LOGOUT ============
+  function enterAppState() {
+    history.pushState({ fkApp: true }, '', location.href);
+  }
+  window.addEventListener('popstate', () => {
+    doLogout();
+  });
+  function doLogout() {
+    clearSession();
+    currentDivision = ''; currentName = '';
+    hide('dashView'); hide('nameView'); hide('submitTaskView'); hide('thanksView');
+    show('loginView');
+    el('divisionPassword').value = '';
+    history.replaceState({ fkApp: false }, '', location.href);
+  }
+
   async function doLoginDivision() {
     hide('loginError');
     const division = el('divisionSelect').value;
@@ -218,11 +323,15 @@
 
   async function chooseName() {
     currentName = el('nameSelect').value;
+    saveSession();
+    enterAppState();
     hide('nameView'); show('dashView');
+    el('welcomeHeading').textContent = 'halo, ' + currentName.split(' ')[0] + '!';
     await refreshDashboard();
   }
 
   async function refreshDashboard() {
+    el('welcomeHeading').textContent = 'halo, ' + currentName.split(' ')[0] + '!';
     const pulse = await callApi({ action: 'getPulseStatus', name: currentName });
     if (pulse.ok) {
       el('statXP').textContent = pulse.totalXP;
@@ -241,7 +350,7 @@
   function renderTasks() {
     const list = el('taskList');
     if (allTasks.length === 0) {
-      list.innerHTML = '<div class="empty">belum ada tugas baru buat kamu</div>';
+      list.innerHTML = '<div class="empty"><span class="emoji">🌤️</span>belum ada tugas baru buat kamu sekarang. santai dulu, nanti di-assign kalau ada yang baru.</div>';
       return;
     }
     list.innerHTML = allTasks.map(t => `
@@ -262,6 +371,9 @@
   function closeSubmitTask() {
     hide('submitTaskView'); show('dashView');
     el('taskPdf').value = ''; el('taskLink').value = '';
+  }
+  function closeThanksView() {
+    hide('thanksView'); show('dashView');
   }
 
   function fileToBase64(file) {
@@ -294,7 +406,8 @@
     });
     if (!result.ok) { el('submitTaskError').textContent = result.error; show('submitTaskError'); return; }
 
-    closeSubmitTask();
+    el('taskPdf').value = ''; el('taskLink').value = '';
+    hide('submitTaskView'); show('thanksView');
     await refreshDashboard();
   }
 
@@ -320,6 +433,9 @@
     el('statStreak').textContent = result.streak;
     el('badgeRow').innerHTML = result.badges.map(b => `<span class="badge">${b}</span>`).join('');
   }
+
+  // saat halaman dibuka/refresh, coba pulihkan sesi dulu
+  restoreSession();
 </script>
 </body>
 </html>
