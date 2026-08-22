@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>head panel · founderku people</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-amber: #F2A623; --brand-coral: #E15C3E; --brand-indigo: #7A78C4;
+    --bg: #FFFFFF; --bg-soft: #F5F4F1; --bg-dark-block: #14131F;
+    --text: #14131F; --text-soft: rgba(20,19,31,0.65); --text-faint: rgba(20,19,31,0.45);
+    --border: rgba(20,19,31,0.10);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Manrope', sans-serif; background: var(--bg-soft); color: var(--text); -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 80px; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; }
+  .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; text-transform: lowercase; }
+  .brand span { color: var(--brand-coral); }
+  .tag { font-size: 12px; color: var(--text-faint); text-transform: lowercase; }
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: lowercase; }
+  input, select, textarea {
+    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
+    font-family: 'Manrope', sans-serif; font-size: 15px; margin-bottom: 14px; background: var(--bg-soft);
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  button {
+    background: var(--bg-dark-block); color: #fff; border: none; border-radius: 999px;
+    padding: 12px 22px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px;
+    cursor: pointer; text-transform: lowercase;
+  }
+  button.secondary { background: transparent; color: var(--brand-coral); border: 1px solid var(--border); }
+  button.small { padding: 7px 14px; font-size: 12px; }
+  .error { color: var(--brand-coral); font-size: 13px; margin: -8px 0 14px; }
+  .hidden { display: none !important; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 9px 18px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg);
+    font-size: 13px; font-weight: 700; cursor: pointer; text-transform: lowercase; color: var(--text);
+  }
+  .tab-btn.active { background: var(--bg-dark-block); color: #fff; border-color: var(--bg-dark-block); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); }
+  th { font-size: 11px; text-transform: uppercase; color: var(--text-faint); }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .pill.open { background: rgba(122,120,196,0.15); color: var(--brand-indigo); }
+  .pill.submitted { background: rgba(34,150,80,0.15); color: #229650; }
+  a.pdf-link { color: var(--brand-coral); font-weight: 700; text-decoration: none; }
+  .row-actions { display: flex; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">founderku<span>·</span>people</div>
+    <div class="tag">head panel</div>
+  </div>
+
+  <!-- LOGIN HEAD -->
+  <div id="loginView" class="card">
+    <h2 style="margin-top:0">masuk sebagai head/pic</h2>
+    <label for="headPassword">password head</label>
+    <input type="password" id="headPassword" placeholder="password head">
+    <div id="loginError" class="error hidden"></div>
+    <button onclick="doLoginHead()">masuk</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashView" class="hidden">
+    <div class="tabs">
+      <div class="tab-btn active" data-tab="tasks" onclick="switchTab('tasks')">tugas & submission</div>
+      <div class="tab-btn" data-tab="roster" onclick="switchTab('roster')">roster intern</div>
+    </div>
+
+    <!-- TAB: TASKS -->
+    <div id="tabTasks">
+      <div class="card">
+        <h2 style="margin-top:0">bikin tugas baru</h2>
+        <label for="taskTitle">judul tugas</label>
+        <input type="text" id="taskTitle" placeholder="misal: bikin 3 draft caption IG">
+        <label for="taskDesc">deskripsi (opsional)</label>
+        <textarea id="taskDesc" placeholder="detail instruksinya apa"></textarea>
+        <label for="taskAssignee">assign ke siapa</label>
+        <select id="taskAssignee"></select>
+        <label for="taskDeadline">deadline (opsional)</label>
+        <input type="date" id="taskDeadline">
+        <div id="taskError" class="error hidden"></div>
+        <button onclick="doCreateTask()">bikin tugas</button>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">semua tugas</h2>
+        <table>
+          <thead><tr><th>judul</th><th>assigned to</th><th>status</th><th>pdf</th></tr></thead>
+          <tbody id="taskTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: ROSTER -->
+    <div id="tabRoster" class="hidden">
+      <div class="card">
+        <h2 style="margin-top:0">tambah intern baru</h2>
+        <label for="newInternName">nama</label>
+        <input type="text" id="newInternName" placeholder="nama lengkap">
+        <label for="newInternDivision">divisi</label>
+        <select id="newInternDivision"></select>
+        <div id="rosterError" class="error hidden"></div>
+        <button onclick="doAddIntern()">tambah</button>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">roster aktif</h2>
+        <table>
+          <thead><tr><th>nama</th><th>divisi</th><th></th></tr></thead>
+          <tbody id="rosterTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // GANTI dengan URL Web App Apps Script kamu setelah deploy (SAMA dengan yang di people-intern.html)
+  const API_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_KAMU';
+
+  const DIVISIONS = [
+    'Content Writer', 'Graphic Designer', 'HR Generalist', 'Marketing Strategist',
+    'Organizational Development', 'Quality Control of Product', 'Social Media Specialist',
+    'Talent Acquisition', 'Training & Development'
+  ];
+
+  let headPassword = '';
+  let overviewData = { roster: [], tasks: [], submissions: [] };
+
+  function el(id) { return document.getElementById(id); }
+  function show(id) { el(id).classList.remove('hidden'); }
+  function hide(id) { el(id).classList.add('hidden'); }
+
+  async function callApi(payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  }
+
+  async function doLoginHead() {
+    hide('loginError');
+    const pw = el('headPassword').value.trim();
+    const result = await callApi({ action: 'loginHead', password: pw });
+    if (!result.ok) { el('loginError').textContent = result.error; show('loginError'); return; }
+    headPassword = pw;
+    hide('loginView'); show('dashView');
+    populateDivisionSelects();
+    await refreshOverview();
+  }
+
+  function populateDivisionSelects() {
+    ['newInternDivision'].forEach(id => {
+      const sel = el(id);
+      sel.innerHTML = '';
+      DIVISIONS.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d; opt.textContent = d;
+        sel.appendChild(opt);
+      });
+    });
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    hide('tabTasks'); hide('tabRoster');
+    show(tab === 'tasks' ? 'tabTasks' : 'tabRoster');
+  }
+
+  async function refreshOverview() {
+    const result = await callApi({ action: 'headOverview', headPassword });
+    if (!result.ok) return;
+    overviewData = result;
+    renderAssigneeOptions();
+    renderTaskTable();
+    renderRosterTable();
+  }
+
+  function renderAssigneeOptions() {
+    const sel = el('taskAssignee');
+    sel.innerHTML = '';
+    overviewData.roster
+      .filter(r => r.Active === true || r.Active === 'TRUE')
+      .forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.Name; opt.textContent = r.Name + ' (' + r.Division + ')';
+        sel.appendChild(opt);
+      });
+  }
+
+  function renderTaskTable() {
+    const body = el('taskTableBody');
+    if (overviewData.tasks.length === 0) {
+      body.innerHTML = '<tr><td colspan="4" style="color:var(--text-faint);text-align:center;padding:20px">belum ada tugas</td></tr>';
+      return;
+    }
+    body.innerHTML = overviewData.tasks.map(t => {
+      const sub = overviewData.submissions.find(s => s.TaskID === t.TaskID);
+      const statusClass = t.Status === 'Submitted' ? 'submitted' : 'open';
+      return `<tr>
+        <td>${t.Title}</td>
+        <td>${t.AssignedTo}</td>
+        <td><span class="pill ${statusClass}">${t.Status}</span></td>
+        <td>${sub ? `<a class="pdf-link" href="${sub.PdfLink}" target="_blank" rel="noopener">lihat pdf</a>` : '-'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderRosterTable() {
+    const body = el('rosterTableBody');
+    const active = overviewData.roster.filter(r => r.Active === true || r.Active === 'TRUE');
+    if (active.length === 0) {
+      body.innerHTML = '<tr><td colspan="3" style="color:var(--text-faint);text-align:center;padding:20px">roster kosong</td></tr>';
+      return;
+    }
+    body.innerHTML = active.map(r => `
+      <tr>
+        <td>${r.Name}</td>
+        <td>${r.Division}</td>
+        <td><button class="small secondary" onclick="doRemoveIntern('${r.Name.replace(/'/g, "\\'")}')">hapus</button></td>
+      </tr>
+    `).join('');
+  }
+
+  async function doCreateTask() {
+    hide('taskError');
+    const title = el('taskTitle').value.trim();
+    if (!title) { el('taskError').textContent = 'judul tugas wajib diisi'; show('taskError'); return; }
+    const assignedTo = el('taskAssignee').value;
+    const assigneeRow = overviewData.roster.find(r => r.Name === assignedTo);
+
+    const result = await callApi({
+      action: 'headCreateTask', headPassword,
+      title, description: el('taskDesc').value.trim(),
+      assignedTo, division: assigneeRow ? assigneeRow.Division : '',
+      deadline: el('taskDeadline').value
+    });
+    if (!result.ok) { el('taskError').textContent = result.error; show('taskError'); return; }
+
+    el('taskTitle').value = ''; el('taskDesc').value = ''; el('taskDeadline').value = '';
+    await refreshOverview();
+  }
+
+  async function doAddIntern() {
+    hide('rosterError');
+    const name = el('newInternName').value.trim();
+    if (!name) { el('rosterError').textContent = 'nama wajib diisi'; show('rosterError'); return; }
+    const division = el('newInternDivision').value;
+
+    const result = await callApi({ action: 'headAddIntern', headPassword, name, division });
+    if (!result.ok) { el('rosterError').textContent = result.error; show('rosterError'); return; }
+
+    el('newInternName').value = '';
+    await refreshOverview();
+  }
+
+  async function doRemoveIntern(name) {
+    if (!confirm('yakin mau hapus ' + name + ' dari roster?')) return;
+    const result = await callApi({ action: 'headRemoveIntern', headPassword, name });
+    if (result.ok) await refreshOverview();
+  }
+</script>
+</body>
+</html>
