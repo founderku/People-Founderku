@@ -252,6 +252,14 @@
   function show(id) { el(id).classList.remove('hidden'); }
   function hide(id) { el(id).classList.add('hidden'); }
 
+  function formatDeadline(d) {
+    if (!d) return '';
+    var date = new Date(d);
+    if (isNaN(date.getTime())) return d;
+    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return date.getUTCDate() + ' ' + months[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
+  }
+
   function setLoading(target, loading, loadingLabel) {
     const btn = typeof target === 'string' ? el(target) : target;
     if (!btn) return;
@@ -381,7 +389,7 @@
       <div class="task-item">
         <h3>${t.Title}</h3>
         <p>${t.Description || ''}</p>
-        ${t.Deadline ? `<div class="deadline">deadline: ${t.Deadline}</div>` : ''}
+        ${t.Deadline ? `<div class="deadline">deadline: ${formatDeadline(t.Deadline)}</div>` : ''}
         ${t.BriefPdfLink ? `<div style="margin-bottom:10px"><a href="${t.BriefPdfLink}" target="_blank" rel="noopener" style="color:var(--brand-indigo);font-weight:700;font-size:13px;text-decoration:none">📎 lihat file panduan</a></div>` : ''}
         <button onclick="openSubmitTask('${t.TaskID}', '${t.Title.replace(/'/g, "\\'")}')">submit hasil</button>
       </div>
