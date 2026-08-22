@@ -54,6 +54,13 @@
   .pill.submitted { background: rgba(34,150,80,0.15); color: #229650; }
   a.pdf-link { color: var(--brand-coral); font-weight: 700; text-decoration: none; }
   .row-actions { display: flex; gap: 6px; }
+
+  .fk-spinner {
+    display: inline-block; width: 13px; height: 13px; margin-right: 6px; vertical-align: -2px;
+    border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+    animation: fk-spin 0.6s linear infinite; opacity: 0.9;
+  }
+  @keyframes fk-spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -72,7 +79,7 @@
     <label for="headPassword">password head</label>
     <input type="password" id="headPassword" placeholder="password head">
     <div id="loginError" class="error hidden"></div>
-    <button onclick="doLoginHead()">masuk</button>
+    <button id="headLoginBtn" onclick="doLoginHead()">masuk</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -101,7 +108,7 @@
         <input type="file" id="taskBriefPdf" accept="application/pdf">
         <div class="hint" style="font-size:12px;color:var(--text-faint);margin:-10px 0 14px">kalau ada instruksi atau template, upload di sini biar founterns bisa langsung download.</div>
         <div id="taskError" class="error hidden"></div>
-        <button onclick="doCreateTask()">bikin tugas</button>
+        <button id="createTaskBtn" onclick="doCreateTask()">bikin tugas</button>
       </div>
 
       <div class="card">
@@ -122,7 +129,7 @@
         <label for="newInternDivision">divisi</label>
         <select id="newInternDivision"></select>
         <div id="rosterError" class="error hidden"></div>
-        <button onclick="doAddIntern()">tambah</button>
+        <button id="addInternBtn" onclick="doAddIntern()">tambah</button>
       </div>
 
       <div class="card">
@@ -152,6 +159,19 @@
   function el(id) { return document.getElementById(id); }
   function show(id) { el(id).classList.remove('hidden'); }
   function hide(id) { el(id).classList.add('hidden'); }
+
+  function setLoading(target, loading, loadingLabel) {
+    const btn = typeof target === 'string' ? el(target) : target;
+    if (!btn) return;
+    if (loading) {
+      if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="fk-spinner"></span>' + (loadingLabel || 'memproses...');
+    } else {
+      btn.disabled = false;
+      if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
+    }
+  }
 
   // ============ SESI: tidak reset saat refresh ============
   function saveSession() { sessionStorage.setItem('fk_head_password', headPassword); }
@@ -195,7 +215,9 @@
   async function doLoginHead() {
     hide('loginError');
     const pw = el('headPassword').value.trim();
+    setLoading('headLoginBtn', true, 'masuk...');
     const result = await callApi({ action: 'loginHead', password: pw });
+    setLoading('headLoginBtn', false);
     if (!result.ok) { el('loginError').textContent = result.error; show('loginError'); return; }
     headPassword = pw;
     saveSession();
@@ -274,7 +296,7 @@
       <tr>
         <td>${r.Name}</td>
         <td>${r.Division}</td>
-        <td><button class="small secondary" onclick="doRemoveIntern('${r.Name.replace(/'/g, "\\'")}')">hapus</button></td>
+        <td><button class="small secondary" onclick="doRemoveIntern('${r.Name.replace(/'/g, "\\'")}', this)">hapus</button></td>
       </tr>
     `).join('');
   }
@@ -307,6 +329,7 @@
       pdfFilename = file.name;
     }
 
+    setLoading('createTaskBtn', true, 'bikin tugas...');
     const result = await callApi({
       action: 'headCreateTask', headPassword,
       title, description: el('taskDesc').value.trim(),
@@ -314,6 +337,7 @@
       deadline: el('taskDeadline').value,
       pdfBase64, pdfFilename
     });
+    setLoading('createTaskBtn', false);
     if (!result.ok) { el('taskError').textContent = result.error; show('taskError'); return; }
 
     el('taskTitle').value = ''; el('taskDesc').value = ''; el('taskDeadline').value = ''; el('taskBriefPdf').value = '';
@@ -326,17 +350,21 @@
     if (!name) { el('rosterError').textContent = 'nama wajib diisi'; show('rosterError'); return; }
     const division = el('newInternDivision').value;
 
+    setLoading('addInternBtn', true, 'menambah...');
     const result = await callApi({ action: 'headAddIntern', headPassword, name, division });
+    setLoading('addInternBtn', false);
     if (!result.ok) { el('rosterError').textContent = result.error; show('rosterError'); return; }
 
     el('newInternName').value = '';
     await refreshOverview();
   }
 
-  async function doRemoveIntern(name) {
+  async function doRemoveIntern(name, btnEl) {
     if (!confirm('yakin mau hapus ' + name + ' dari roster?')) return;
+    setLoading(btnEl, true, 'menghapus...');
     const result = await callApi({ action: 'headRemoveIntern', headPassword, name });
     if (result.ok) await refreshOverview();
+    else setLoading(btnEl, false);
   }
 
   // saat halaman dibuka/refresh, coba pulihkan sesi dulu
