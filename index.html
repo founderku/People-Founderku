@@ -213,7 +213,7 @@
     <!-- MODAL SUBMIT TUGAS -->
     <div id="submitTaskView" class="card hidden">
       <h2 style="margin-top:0" id="submitTaskTitle">submit tugas</h2>
-      <label for="taskPdf">file PDF hasil kerjaan</label>
+      <label for="taskPdf">file PDF hasil kerjaan (opsional)</label>
       <input type="file" id="taskPdf" accept="application/pdf">
       <label for="taskLink">link tambahan (opsional, misal Drive/Figma)</label>
       <input type="text" id="taskLink" placeholder="https://...">
@@ -421,22 +421,28 @@
   async function doSubmitTask() {
     hide('submitTaskError');
     const fileInput = el('taskPdf');
-    if (!fileInput.files.length) {
-      el('submitTaskError').textContent = 'file PDF wajib diupload';
-      show('submitTaskError'); return;
-    }
-    const file = fileInput.files[0];
-    if (file.type !== 'application/pdf') {
-      el('submitTaskError').textContent = 'file harus format PDF';
-      show('submitTaskError'); return;
-    }
-    const pdfBase64 = await fileToBase64(file);
     const extraLink = el('taskLink').value.trim();
+    let pdfBase64 = null, pdfFilename = null;
+
+    if (fileInput.files.length) {
+      const file = fileInput.files[0];
+      if (file.type !== 'application/pdf') {
+        el('submitTaskError').textContent = 'file harus format PDF';
+        show('submitTaskError'); return;
+      }
+      pdfBase64 = await fileToBase64(file);
+      pdfFilename = file.name;
+    }
+
+    if (!pdfBase64 && !extraLink) {
+      el('submitTaskError').textContent = 'isi minimal salah satu: file PDF atau link';
+      show('submitTaskError'); return;
+    }
 
     setLoading('submitTaskBtn', true, 'mengupload...');
     const result = await callApi({
       action: 'submitTask', taskId: currentTaskId, name: currentName, division: currentDivision,
-      pdfBase64, pdfFilename: file.name, extraLink
+      pdfBase64, pdfFilename, extraLink
     });
     setLoading('submitTaskBtn', false);
     if (!result.ok) { el('submitTaskError').textContent = result.error; show('submitTaskError'); return; }

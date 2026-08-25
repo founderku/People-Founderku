@@ -297,7 +297,7 @@
         <td>${t.AssignedTo}</td>
         <td><span class="pill ${statusClass}">${t.Status}</span></td>
         <td>${t.BriefPdfLink ? `<a class="pdf-link" href="${t.BriefPdfLink}" target="_blank" rel="noopener">lihat</a>` : '-'}</td>
-        <td>${sub ? `<a class="pdf-link" href="${sub.PdfLink}" target="_blank" rel="noopener">lihat pdf</a>` : '-'}</td>
+        <td>${sub ? (sub.PdfLink ? `<a class="pdf-link" href="${sub.PdfLink}" target="_blank" rel="noopener">lihat pdf</a>` : (sub.ExtraLink ? `<a class="pdf-link" href="${sub.ExtraLink}" target="_blank" rel="noopener">lihat link</a>` : 'ada, tanpa file')) : '-'}</td>
       </tr>`;
     }).join('');
   }
